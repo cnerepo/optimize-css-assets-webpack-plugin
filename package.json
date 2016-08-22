@@ -22,5 +22,14 @@
     "duplicate",
     "extract-text-webpack-plugin"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.9.0",
+    "webpack": "^1.13.2"
+  },
+  "scripts": {
+    "test": "NODE_ENV=production webpack -p --progress --profile --colors --config ./tests/webpack.config.js"
+  }
 }
