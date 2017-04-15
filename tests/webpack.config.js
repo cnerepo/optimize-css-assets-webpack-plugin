@@ -25,11 +25,12 @@ var plugins = [
   }),
   new ExtractTextPlugin('[name].css', { allChunks: true }),
   new OptimizeCssAssetsPlugin({
-    cssProcessorOptions: { discardComments: {removeAll: true }, zindex: false},
+    cssProcessorOptions: { discardComments: {removeAll: true }, zindex: false, map: { inline: false } },
   })
 ];
 
 module.exports = {
+  devtool: "source-map",
   context: projectPath + '/',
   entry: entry,
   output: {
@@ -39,7 +40,7 @@ module.exports = {
   module: {
     loaders: [{
       test: /\.css$/,
-      loader: ExtractTextPlugin.extract('css-loader?&discardDuplicates&discardComments'),
+      loader: ExtractTextPlugin.extract('css-loader?&discardDuplicates&discardComments&sourceMap'),
     },{
       test: /\.png$/,
       loader: 'file-loader'
