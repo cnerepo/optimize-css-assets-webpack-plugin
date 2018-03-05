@@ -66,6 +66,33 @@ describe('Webpack Integration Tests', () => {
       });
     });
   });
+
+  it('writes processed css to destination', (done) => {
+    fs.readFile(__dirname + '/default/default.css', (err, data) => {
+      const destination = 'tmp.css';
+      const expectedCss = '.inifinity-pool{overflow:hidden;}';
+      const fakeProcessor = jest.fn();
+      fakeProcessor.mockReturnValue(Promise.resolve({ css: expectedCss }));
+      const cssProcessor = {
+        process: fakeProcessor
+      };
+      const cssProcessorOptions = { discardComments: { removeAll: true } };
+      const plugin = new OptimizeCssAssetsPlugin({
+        cssProcessor,
+        cssProcessorOptions
+      });
+      const config = Object.assign(defaultConfig, {plugins: [plugin, new ExtractTextPlugin(destination)]});
+      webpack(config, (err, stats) => {
+        if (err) return done(err);
+        if (stats.hasErrors()) return done(new Error(stats.toString()));
+        fs.readFile(__dirname + '/default/exports/tmp.css', (err, data)  => {
+          expect(cssProcessor.process).toHaveBeenCalled();
+          expect(data.toString()).toEqual(expectedCss);
+          done();
+        });
+      });
+    });
+  });
 });
 
 function readFileOrEmpty(path) {
